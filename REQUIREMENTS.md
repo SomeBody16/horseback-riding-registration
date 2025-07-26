@@ -129,6 +129,106 @@ No mobile support is required, web page will only be used from browser
 - **Forms**: For create/edit operations
 - **Modals**: For delete confirmations
 
+### Server Actions
+All server actions should be placed in the `src/action/` directory and follow these patterns:
+
+#### Action Structure
+- Use `"use server"` directive at the top of each action file
+- Export async functions that handle form submissions
+- Use Prisma client for database operations
+- Implement proper error handling with redirects
+- Follow TypeScript strict typing
+
+#### Required Actions
+- **`src/action/slots.ts`**: Handle slot CRUD operations
+  - `createSlot(formData: FormData)`: Create new slot
+  - `updateSlot(id: string, formData: FormData)`: Update existing slot
+  - `deleteSlot(id: string)`: Delete slot with confirmation
+  - `getSlots()`: Fetch all slots for listing
+  - `getSlot(id: string)`: Fetch single slot details
+
+#### Action File Structure
+```
+src/action/
+├── slots.ts          # Slot CRUD operations
+├── admin.ts          # Admin-specific actions (future)
+└── handleRegistration.ts  # Existing registration action
+```
+
+#### Action Function Signatures
+```typescript
+// Slot management actions
+export const createSlot = async (formData: FormData): Promise<void>
+export const updateSlot = async (id: string, formData: FormData): Promise<void>
+export const deleteSlot = async (id: string): Promise<void>
+export const getSlots = async (): Promise<Slot[]>
+export const getSlot = async (id: string): Promise<Slot | null>
+```
+
+#### Action Patterns
+```typescript
+"use server";
+
+import { PrismaClient } from "@/prisma/generated";
+import { redirect } from "next/navigation";
+
+const prisma = new PrismaClient();
+
+// Error handling helper
+const errorRedirect = (error: string) => {
+  return redirect(`/admin/error/${error}`);
+};
+
+// Form data parsing helper
+const parseSlotFormData = (formData: FormData) => {
+  const date = formData.get("date") as string;
+  const startTime = formData.get("startTime") as string;
+  const endTime = formData.get("endTime") as string;
+  const type = formData.get("type") as string;
+  const limit = parseInt(formData.get("limit") as string, 10);
+  const description = formData.get("description") as string;
+
+  if (!date || !startTime || !endTime || !type || isNaN(limit)) {
+    throw new Error("Missing required fields");
+  }
+
+  return { date, startTime, endTime, type, limit, description };
+};
+
+export const createSlot = async (formData: FormData) => {
+  try {
+    const slotData = parseSlotFormData(formData);
+    
+    await prisma.slot.create({
+      data: slotData,
+    });
+
+    redirect("/admin/slots?success=created");
+  } catch (error) {
+    errorRedirect("invalid-data");
+  }
+};
+```
+
+#### Form Integration
+- Use `action={createSlot}` in form components
+- Handle loading states with `useFormStatus` hook
+- Display validation errors using `useFormState` hook
+- Implement optimistic updates where appropriate
+
+#### Error Handling
+- Use consistent error redirects: `/admin/error/{error-code}`
+- Common error codes: `invalid-data`, `not-found`, `unauthorized`, `server-error`
+- Implement proper validation before database operations
+- Log errors for debugging while showing user-friendly messages
+
+#### Validation Patterns
+- Validate required fields in form data parsing
+- Check data types and ranges (e.g., positive numbers for limits)
+- Validate date/time logic (end time after start time)
+- Ensure slot doesn't conflict with existing slots
+- Check user permissions for admin operations
+
 ### Routing
 - **Base**: `/admin`
 - **Slots**: `/admin/slots`
