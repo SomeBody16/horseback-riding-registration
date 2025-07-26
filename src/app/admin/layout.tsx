@@ -4,7 +4,7 @@ import { AppShell, Burger, Group, Title, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconDashboard, IconCalendarTime } from '@tabler/icons-react';
+import { IconDashboard, IconCalendarTime, IconUsers } from '@tabler/icons-react';
 
 export default function AdminLayout({
   children,
@@ -26,6 +26,12 @@ export default function AdminLayout({
       href: '/admin/slot',
       icon: IconCalendarTime,
       active: pathname.startsWith('/admin/slot'),
+    },
+    {
+      label: 'Registration',
+      href: '/admin/registration',
+      icon: IconUsers,
+      active: pathname.startsWith('/admin/registration'),
     },
   ];
 
