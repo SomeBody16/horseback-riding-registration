@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import "./globals.css";
 import { theme } from './theme';
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <MantineProvider theme={theme} defaultColorScheme="dark" withGlobalClasses>
+          <Notifications />
           {children}
         </MantineProvider>
       </body>
