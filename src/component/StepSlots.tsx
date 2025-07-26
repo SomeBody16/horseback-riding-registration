@@ -24,31 +24,33 @@ export function StepSlots(props: StepSlotsProps) {
 	}, [selectedSlot, props]);
 
 	return (
-		<Fieldset style={{ width: 600 }}>
-			<Grid gutter="lg">
-				<Grid.Col span={6}>
-					<StepSlotsDate
-						slots={props.slots}
-						value={selectedDate}
-						onChange={setSelectedDate}
-					/>
-				</Grid.Col>
-				<Grid.Col span={6}>
-					{selectedDate !== null && (
-						<StepSlotsTime
+		<>
+			<Fieldset style={{ width: 600 }}>
+				<Grid gutter="lg">
+					<Grid.Col span={6}>
+						<StepSlotsDate
 							slots={props.slots}
-							selectedDate={selectedDate}
-							value={selectedSlot}
-							onChange={setSelectedSlot}
+							value={selectedDate}
+							onChange={setSelectedDate}
 						/>
-					)}
-				</Grid.Col>
-			</Grid>
+					</Grid.Col>
+					<Grid.Col span={6}>
+						{selectedDate !== null && (
+							<StepSlotsTime
+								slots={props.slots}
+								selectedDate={selectedDate}
+								value={selectedSlot}
+								onChange={setSelectedSlot}
+							/>
+						)}
+					</Grid.Col>
+				</Grid>
+			</Fieldset>
 			<Group justify="flex-end" mt="lg">
 				<Button onClick={props.onNext} disabled={selectedSlot === undefined}>
 					Next
 				</Button>
 			</Group>
-		</Fieldset>
+		</>
 	);
 }

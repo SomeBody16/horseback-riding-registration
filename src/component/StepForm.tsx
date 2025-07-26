@@ -36,26 +36,28 @@ export function StepForm(props: StepFormProps) {
 		email && !isEmailValid(email) ? "Invalid email address" : undefined;
 
 	return (
-		<Fieldset style={{ width: 600 }}>
-			<Stack gap="xl">
-				<TextInput
-					label="E-mail address"
-					description="Please enter your Cisco E-mail"
-					required
-					placeholder="example@cisco.com"
-					value={email || ""}
-					onChange={(e) => setEmail(e.target.value)}
-					error={emailError}
-				/>
-				<Group justify="space-between">
-					<Button variant="outline" onClick={props.onPrev}>
-						Back
-					</Button>
-					<Button onClick={props.onNext} disabled={!email}>
-						Next
-					</Button>
-				</Group>
-			</Stack>
-		</Fieldset>
+		<>
+			<Fieldset style={{ width: 600 }}>
+				<Stack gap="xl">
+					<TextInput
+						label="E-mail address"
+						description="Please enter your Cisco E-mail"
+						required
+						placeholder="example@cisco.com"
+						value={email || ""}
+						onChange={(e) => setEmail(e.target.value)}
+						error={emailError}
+					/>
+				</Stack>
+			</Fieldset>
+			<Group justify="space-between" mt="lg">
+				<Button variant="outline" onClick={props.onPrev}>
+					Back
+				</Button>
+				<Button onClick={props.onNext} disabled={!email}>
+					Next
+				</Button>
+			</Group>
+		</>
 	);
 }

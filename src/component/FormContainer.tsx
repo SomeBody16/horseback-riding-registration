@@ -8,15 +8,15 @@ import { StepForm } from "./StepForm";
 import { StepConfirm } from "./StepConfirm";
 
 export type FormContainerProps = {
-  slots: Slot[];
+	slots: Slot[];
 };
 
 export function FormContainer({ slots }: FormContainerProps) {
-  const [step, setStep] = useState(0);
-  const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>();
-  const [email, setEmail] = useState<string>("");
+	const [step, setStep] = useState(0);
+	const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>();
+	const [email, setEmail] = useState<string>("");
 
-  return (
+	return (
 		<Container size="md" mt="xl">
 			<Stepper active={step}>
 				<Stepper.Step label="Select" description="Date and slots">
@@ -37,7 +37,6 @@ export function FormContainer({ slots }: FormContainerProps) {
 				<Stepper.Step label="Confirm" description="Registration">
 					<StepConfirm
 						onPrev={() => setStep(1)}
-						onNext={() => {}}
 						selectedSlot={selectedSlot!}
 						email={email}
 					/>
