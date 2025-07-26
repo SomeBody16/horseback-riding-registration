@@ -5,43 +5,50 @@ import { StepSlotsDate } from "./StepSlots.date";
 import { StepSlotsTime } from "./StepSlots.time";
 
 export type StepSlotsProps = {
-  slots: Slot[];
-  onChange: (slots: Slot | undefined) => void;
-  onNext: () => void;
+	slots: Slot[];
+	value: Slot | undefined;
+	onChange: (slot: Slot | undefined) => void;
+	onNext: () => void;
 };
 
-export function StepSlots({ slots, onChange, onNext }: StepSlotsProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>();
+export function StepSlots(props: StepSlotsProps) {
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+		props.value?.date
+	);
+	const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>(
+		props.value
+	);
 
-  useEffect(() => {
-    onChange(selectedSlot);
-  }, [selectedSlot, onChange]);
+	useEffect(() => {
+		props.onChange(selectedSlot);
+	}, [selectedSlot, props]);
 
-  return (
-    <Fieldset>
-      <Grid gutter="lg">
-        <Grid.Col span={6}>
-          <StepSlotsDate slots={slots} onChange={setSelectedDate} />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          {selectedDate !== null && (
-            <StepSlotsTime
-              slots={slots}
-              selectedDate={selectedDate}
-              onChange={setSelectedSlot}
-            />
-          )}
-        </Grid.Col>
-      </Grid>
-      <Group justify="flex-end" mt="lg">
-        <Button
-          onClick={onNext}
-          disabled={selectedSlot === undefined}
-        >
-          Next
-        </Button>
-      </Group>
-    </Fieldset>
-  );
+	return (
+		<Fieldset style={{ width: 600 }}>
+			<Grid gutter="lg">
+				<Grid.Col span={6}>
+					<StepSlotsDate
+						slots={props.slots}
+						value={selectedDate}
+						onChange={setSelectedDate}
+					/>
+				</Grid.Col>
+				<Grid.Col span={6}>
+					{selectedDate !== null && (
+						<StepSlotsTime
+							slots={props.slots}
+							selectedDate={selectedDate}
+							value={selectedSlot}
+							onChange={setSelectedSlot}
+						/>
+					)}
+				</Grid.Col>
+			</Grid>
+			<Group justify="flex-end" mt="lg">
+				<Button onClick={props.onNext} disabled={selectedSlot === undefined}>
+					Next
+				</Button>
+			</Group>
+		</Fieldset>
+	);
 }

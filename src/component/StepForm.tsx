@@ -17,46 +17,45 @@ const isEmailValid = (email: string) => {
 };
 
 export type StepFormProps = {
-  onEmailChange: (email: string) => void;
-  onPrev: () => void;
-  onNext: () => void;
+	onEmailChange: (email: string) => void;
+	onPrev: () => void;
+	onNext: () => void;
 };
 
-export function StepForm({ onEmailChange, onPrev, onNext }: StepFormProps) {
-  const [email, setEmail] = useLocalStorage({
-    key: "cisco-email",
-    defaultValue: "",
-  });
+export function StepForm(props: StepFormProps) {
+	const [email, setEmail] = useLocalStorage({
+		key: "cisco-email",
+		defaultValue: "",
+	});
 
-  useEffect(() => {
-    onEmailChange(email || "");
-  }, [email, onEmailChange]);
+	useEffect(() => {
+		props.onEmailChange(email || "");
+	}, [email, props]);
 
-  const emailError = email && !isEmailValid(email) 
-    ? "Invalid email address" 
-    : undefined;
+	const emailError =
+		email && !isEmailValid(email) ? "Invalid email address" : undefined;
 
-  return (
-    <Fieldset>
-      <Stack gap="xl">
-        <TextInput
-          label="E-mail address"
-          description="Please enter your Cisco E-mail"
-          required
-          placeholder="example@cisco.com"
-          value={email || ""}
-          onChange={(e) => setEmail(e.target.value)}
-          error={emailError}
-        />
-        <Group justify="space-between">
-          <Button variant="outline" onClick={onPrev}>
-            Back
-          </Button>
-          <Button onClick={onNext} disabled={!email}>
-            Next
-          </Button>
-        </Group>
-      </Stack>
-    </Fieldset>
-  );
+	return (
+		<Fieldset style={{ width: 600 }}>
+			<Stack gap="xl">
+				<TextInput
+					label="E-mail address"
+					description="Please enter your Cisco E-mail"
+					required
+					placeholder="example@cisco.com"
+					value={email || ""}
+					onChange={(e) => setEmail(e.target.value)}
+					error={emailError}
+				/>
+				<Group justify="space-between">
+					<Button variant="outline" onClick={props.onPrev}>
+						Back
+					</Button>
+					<Button onClick={props.onNext} disabled={!email}>
+						Next
+					</Button>
+				</Group>
+			</Stack>
+		</Fieldset>
+	);
 }

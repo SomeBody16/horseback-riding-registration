@@ -17,40 +17,32 @@ export function FormContainer({ slots }: FormContainerProps) {
   const [email, setEmail] = useState<string>("");
 
   return (
-    <Container size="md" mt="xl">
-      <Stepper active={step}>
-        <Stepper.Step
-          label="Select"
-          description="Date and slots"
-        >
-          <StepSlots
-            slots={slots}
-            onChange={setSelectedSlot}
-            onNext={() => setStep(1)}
-          />
-        </Stepper.Step>
-        <Stepper.Step 
-          label="Fill" 
-          description="Your information"
-        >
-          <StepForm
-            onEmailChange={setEmail}
-            onPrev={() => setStep(0)}
-            onNext={() => setStep(2)}
-          />
-        </Stepper.Step>
-        <Stepper.Step 
-          label="Confirm" 
-          description="Registration"
-        >
-          <StepConfirm
-            onPrev={() => setStep(1)}
-            onNext={() => {}}
-            selectedSlot={selectedSlot!}
-            email={email}
-          />
-        </Stepper.Step>
-      </Stepper>
-    </Container>
-  );
+		<Container size="md" mt="xl">
+			<Stepper active={step}>
+				<Stepper.Step label="Select" description="Date and slots">
+					<StepSlots
+						slots={slots}
+						value={selectedSlot}
+						onChange={setSelectedSlot}
+						onNext={() => setStep(1)}
+					/>
+				</Stepper.Step>
+				<Stepper.Step label="Fill" description="Your information">
+					<StepForm
+						onEmailChange={setEmail}
+						onPrev={() => setStep(0)}
+						onNext={() => setStep(2)}
+					/>
+				</Stepper.Step>
+				<Stepper.Step label="Confirm" description="Registration">
+					<StepConfirm
+						onPrev={() => setStep(1)}
+						onNext={() => {}}
+						selectedSlot={selectedSlot!}
+						email={email}
+					/>
+				</Stepper.Step>
+			</Stepper>
+		</Container>
+	);
 }
