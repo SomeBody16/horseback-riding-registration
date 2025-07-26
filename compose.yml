@@ -11,5 +11,23 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
 
+  app:
+    image: horse-riding-registration__app:latest
+    container_name: horse-riding-registration__app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DATABASE_URL: $DATABASE_URL
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: horse-riding-registration__cloudflared
+    command: tunnel --no-autoupdate run --token $CLOUDFLARED__TOKEN
+
 volumes:
   database:

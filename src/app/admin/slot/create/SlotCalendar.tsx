@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Slot } from "@/prisma/generated";
 import { Indicator } from "@mantine/core";
 import { DatePicker, DatePickerProps } from "@mantine/dates";
 import dayjs from "dayjs";
-import { useMappedState } from "@/hooks/useMappedState";
 
 const renderDay = (slots: Slot[]) => {
 	const render: DatePickerProps["renderDay"] = (date) => {

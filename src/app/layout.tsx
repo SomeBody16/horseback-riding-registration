@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Register for horseback riding sessions",
 };
 
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{

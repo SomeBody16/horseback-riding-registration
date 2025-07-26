@@ -2,9 +2,9 @@ import { Container, Title, Text, Button, Stack, Alert } from "@mantine/core";
 import Link from "next/link";
 
 interface ErrorPageProps {
-	params: {
+	params: Promise<{
 		error?: string;
-	};
+	}>;
 }
 
 const getErrorMessage = (error?: string) => {
@@ -30,8 +30,8 @@ const getErrorMessage = (error?: string) => {
 	}
 };
 
-export default function ErrorPage({ params }: ErrorPageProps) {
-	const { title, message } = getErrorMessage(params.error);
+export default async function ErrorPage({ params }: ErrorPageProps) {
+	const { title, message } = getErrorMessage((await params).error);
 
 	return (
 		<Container size="md" py="xl">
