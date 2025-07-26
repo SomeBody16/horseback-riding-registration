@@ -11,19 +11,19 @@ import {
 	Paper,
 	ScrollArea,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
 import { IconCopy, IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { Slot } from "@/prisma/generated";
+import { Registration, Slot } from "@/prisma/generated";
 import dayjs from "dayjs";
+import { SlotCalendar } from "./SlotCalendar";
 
 export type RegistrationPageProps = {
-	slots: Slot[];
+	slots: (Slot & { registrations: Registration[] })[];
 };
 
 export function RegistrationPage({ slots }: RegistrationPageProps) {
-	const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+	const [selectedDates, setSelectedDates] = useState<string[]>([]);
 
 	const registrationText = useMemo(() => {
 		if (selectedDates.length === 0) return "";
@@ -36,20 +36,20 @@ export function RegistrationPage({ slots }: RegistrationPageProps) {
 
 			if (slotsForDate.length > 0) {
 				acc[dateKey] = {
-					date,
+					date: dayjs(date).toDate(),
 					slots: slotsForDate,
 				};
 			}
 
 			return acc;
-		}, {} as Record<string, { date: Date; slots: Slot[] }>);
+		}, {} as Record<string, { date: Date; slots: (Slot & { registrations: Registration[] })[] }>);
 
 		return Object.values(groupedByDate)
 			.sort((a, b) => a.date.getTime() - b.date.getTime())
 			.map(({ date, slots }) => {
 				const formattedDate = dayjs(date).format("DD.MM.YYYY");
 				const weekDay = dayjs(date).format("dddd");
-				
+
 				const registrationsText = slots
 					.sort((a, b) => a.startTime.localeCompare(b.startTime))
 					.map((slot) => {
@@ -97,18 +97,29 @@ export function RegistrationPage({ slots }: RegistrationPageProps) {
 					<Card shadow="sm" padding="xl" radius="md" withBorder>
 						<Stack gap="lg">
 							<Title order={2}>Select Dates</Title>
-							<DatePicker
+							<SlotCalendar
+								slots={slots}
+								value={selectedDates}
+								onChange={setSelectedDates}
+							/>
+							{/* <DatePicker
 								type="multiple"
 								value={selectedDates}
 								onChange={setSelectedDates}
 								placeholder="Select dates to view registrations"
 								clearable
-							/>
+							/> */}
 						</Stack>
 					</Card>
 
 					{/* Registration Display */}
-					<Card shadow="sm" padding="xl" radius="md" withBorder style={{ flex: 1 }}>
+					<Card
+						shadow="sm"
+						padding="xl"
+						radius="md"
+						withBorder
+						style={{ flex: 1 }}
+					>
 						<Stack gap="lg">
 							<Group justify="space-between">
 								<Title order={2}>Registrations</Title>
