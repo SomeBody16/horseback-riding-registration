@@ -1,0 +1,128 @@
+---
+description: When working with mantine
+alwaysApply: false
+---
+# Mantine UI Patterns and Best Practices
+
+## Theme and Styling
+- Use the theme configuration from [src/app/theme.ts](mdc:src/app/theme.ts)
+- Leverage Mantine's built-in dark mode support (already configured in [src/app/layout.tsx](mdc:src/app/layout.tsx))
+- Use Mantine's spacing scale and color palette
+- Prefer Mantine components over custom CSS when possible
+
+## Component Usage Patterns
+- Use `@mantine/core` components for consistent UI
+- Use `@mantine/hooks` for common functionality
+- Use `@mantine/dates` for date/time selection components
+- Wrap form components with `MantineProvider` (already done in layout)
+
+## Form Components
+- Use Mantine's form components: `TextInput`, `Select`, `DatePicker`, `TimeInput`
+- Implement proper form validation with Mantine's validation system
+- Use `useForm` hook from `@mantine/hooks` for form state management
+- Group related form fields with `Group` component
+
+## Layout and Spacing
+- Use `Container` for page-level layout
+- Use `Stack` for vertical spacing between elements
+- Use `Group` for horizontal alignment
+- Use `Paper` for card-like containers
+- Use `Divider` for visual separation
+
+## Responsive Design
+- Use Mantine's responsive props: `m`, `p`, `size`, `w`, `h`
+- Use breakpoint props: `visibleFrom`, `hiddenFrom`
+- Test on different screen sizes
+
+## Example Mantine Component Structure
+```typescript
+import { Container, Paper, Stack, TextInput, Button, Group } from '@mantine/core';
+import { useForm } from '@mantine/hooks';
+
+export default function FormComponent() {
+  const form = useForm({
+    initialValues: { email: '' },
+    validate: { email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email') }
+  });
+
+  return (
+    <Container size="sm">
+      <Paper p="md" withBorder>
+        <Stack gap="md">
+          <TextInput
+            label="Email"
+            placeholder="Enter your email"
+            {...form.getInputProps('email')}
+          />
+          <Group justify="flex-end">
+            <Button type="submit">Submit</Button>
+          </Group>
+        </Stack>
+      </Paper>
+    </Container>
+  );
+}
+```
+
+# Mantine UI Patterns and Best Practices
+
+## Theme and Styling
+- Use the theme configuration from [src/app/theme.ts](mdc:src/app/theme.ts)
+- Leverage Mantine's built-in dark mode support (already configured in [src/app/layout.tsx](mdc:src/app/layout.tsx))
+- Use Mantine's spacing scale and color palette
+- Prefer Mantine components over custom CSS when possible
+
+## Component Usage Patterns
+- Use `@mantine/core` components for consistent UI
+- Use `@mantine/hooks` for common functionality
+- Use `@mantine/dates` for date/time selection components
+- Wrap form components with `MantineProvider` (already done in layout)
+
+## Form Components
+- Use Mantine's form components: `TextInput`, `Select`, `DatePicker`, `TimeInput`
+- Implement proper form validation with Mantine's validation system
+- Use `useForm` hook from `@mantine/hooks` for form state management
+- Group related form fields with `Group` component
+
+## Layout and Spacing
+- Use `Container` for page-level layout
+- Use `Stack` for vertical spacing between elements
+- Use `Group` for horizontal alignment
+- Use `Paper` for card-like containers
+- Use `Divider` for visual separation
+
+## Responsive Design
+- Use Mantine's responsive props: `m`, `p`, `size`, `w`, `h`
+- Use breakpoint props: `visibleFrom`, `hiddenFrom`
+- Test on different screen sizes
+
+## Example Mantine Component Structure
+```typescript
+import { Container, Paper, Stack, TextInput, Button, Group } from '@mantine/core';
+import { useForm } from '@mantine/hooks';
+
+export default function FormComponent() {
+  const form = useForm({
+    initialValues: { email: '' },
+    validate: { email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email') }
+  });
+
+  return (
+    <Container size="sm">
+      <Paper p="md" withBorder>
+        <Stack gap="md">
+          <TextInput
+            label="Email"
+            placeholder="Enter your email"
+            {...form.getInputProps('email')}
+          />
+          <Group justify="flex-end">
+            <Button type="submit">Submit</Button>
+          </Group>
+        </Stack>
+      </Paper>
+    </Container>
+  );
+}
+```
+

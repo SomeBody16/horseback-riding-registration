@@ -1,0 +1,108 @@
+---
+description: When working with CI, terminal, project development workflow etc
+alwaysApply: false
+---
+# Development Workflow
+
+## Available Scripts
+From [package.json](mdc:package.json):
+- `yarn dev` - Start development server with Turbopack
+- `yarn build` - Build for production
+- `yarn start` - Start production server
+- `yarn lint` - Run ESLint
+
+## Database Commands
+- `yarn db:up` - Start PostgreSQL database with Docker Compose
+- `yarn db:push` - Push schema changes to database
+- `yarn db:studio` - Open Prisma Studio for database management
+- `yarn db:generate` - Generate Prisma client
+
+## Development Setup
+1. Install dependencies: `yarn install`
+2. Start database: `yarn db:up`
+3. Push schema: `yarn db:push`
+4. Generate Prisma client: `yarn db:generate`
+5. Start development server: `yarn dev`
+
+## File Structure Conventions
+- Components go in `src/component/`
+- App pages go in `src/app/`
+- Database schema in `prisma/schema.prisma`
+- Use TypeScript for all new files
+- Follow the existing naming conventions
+
+## Code Quality
+- Run `yarn lint` before committing
+- Use TypeScript strict mode (already configured)
+- Follow the established component patterns
+- Use Mantine components for consistent UI
+
+## Database Changes
+1. Modify [prisma/schema.prisma](mdc:prisma/schema.prisma)
+2. Run `yarn db:push` to apply changes
+3. Run `yarn db:generate` to update client
+4. Update TypeScript code to use new schema
+
+## Environment Variables
+- Database configuration in [.env](mdc:.env)
+- Never commit sensitive data
+- Use proper environment variable naming
+
+## Deployment
+- Build with `yarn build`
+- Start with `yarn start`
+- Ensure database is properly configured
+- Set up proper environment variables
+
+# Development Workflow
+
+## Available Scripts
+From [package.json](mdc:package.json):
+- `yarn dev` - Start development server with Turbopack
+- `yarn build` - Build for production
+- `yarn start` - Start production server
+- `yarn lint` - Run ESLint
+
+## Database Commands
+- `yarn db:up` - Start PostgreSQL database with Docker Compose
+- `yarn db:push` - Push schema changes to database
+- `yarn db:studio` - Open Prisma Studio for database management
+- `yarn db:generate` - Generate Prisma client
+
+## Development Setup
+1. Install dependencies: `yarn install`
+2. Start database: `yarn db:up`
+3. Push schema: `yarn db:push`
+4. Generate Prisma client: `yarn db:generate`
+5. Start development server: `yarn dev`
+
+## File Structure Conventions
+- Components go in `src/component/`
+- App pages go in `src/app/`
+- Database schema in `prisma/schema.prisma`
+- Use TypeScript for all new files
+- Follow the existing naming conventions
+
+## Code Quality
+- Run `yarn lint` before committing
+- Use TypeScript strict mode (already configured)
+- Follow the established component patterns
+- Use Mantine components for consistent UI
+
+## Database Changes
+1. Modify [prisma/schema.prisma](mdc:prisma/schema.prisma)
+2. Run `yarn db:push` to apply changes
+3. Run `yarn db:generate` to update client
+4. Update TypeScript code to use new schema
+
+## Environment Variables
+- Database configuration in [.env](mdc:.env)
+- Never commit sensitive data
+- Use proper environment variable naming
+
+## Deployment
+- Build with `yarn build`
+- Start with `yarn start`
+- Ensure database is properly configured
+- Set up proper environment variables
+

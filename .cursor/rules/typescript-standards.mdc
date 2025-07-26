@@ -1,0 +1,91 @@
+---
+alwaysApply: true
+---
+# TypeScript Coding Standards
+
+## General Rules
+- Use strict TypeScript configuration (already enabled in [tsconfig.json](mdc:tsconfig.json))
+- Always use explicit type annotations for function parameters and return types
+- Prefer `interface` over `type` for object shapes
+- Use `Readonly<T>` for props that shouldn't be mutated
+
+## React Component Standards
+- Use functional components with hooks
+- Always type component props with interfaces
+- Use `React.ReactNode` for children props
+- Export components as default exports
+- Use proper TypeScript generics for hooks like `useState<T>`
+
+## Import/Export Patterns
+- Use absolute imports with path aliases: `@/component/FormContainer`
+- Group imports: React, external libraries, internal modules, types
+- Use named exports for utilities and types
+- Use default exports for components
+
+## Database Types
+- Use Prisma-generated types from [prisma/schema.prisma](mdc:prisma/schema.prisma)
+- Import types from `@/prisma/generated/client`
+- Always type database query results
+
+## Example Component Structure
+```typescript
+interface ComponentProps {
+  readonly title: string;
+  readonly children?: React.ReactNode;
+}
+
+export default function Component({ title, children }: ComponentProps) {
+  const [state, setState] = useState<string>('');
+  
+  return (
+    <div>
+      <h1>{title}</h1>
+      {children}
+    </div>
+  );
+}
+```
+# TypeScript Coding Standards
+
+## General Rules
+- Use strict TypeScript configuration (already enabled in [tsconfig.json](mdc:tsconfig.json))
+- Always use explicit type annotations for function parameters and return types
+- Prefer `interface` over `type` for object shapes
+- Use `Readonly<T>` for props that shouldn't be mutated
+
+## React Component Standards
+- Use functional components with hooks
+- Always type component props with interfaces
+- Use `React.ReactNode` for children props
+- Export components as default exports
+- Use proper TypeScript generics for hooks like `useState<T>`
+
+## Import/Export Patterns
+- Use absolute imports with path aliases: `@/component/FormContainer`
+- Group imports: React, external libraries, internal modules, types
+- Use named exports for utilities and types
+- Use default exports for components
+
+## Database Types
+- Use Prisma-generated types from [prisma/schema.prisma](mdc:prisma/schema.prisma)
+- Import types from `@/prisma/generated/client`
+- Always type database query results
+
+## Example Component Structure
+```typescript
+interface ComponentProps {
+  readonly title: string;
+  readonly children?: React.ReactNode;
+}
+
+export default function Component({ title, children }: ComponentProps) {
+  const [state, setState] = useState<string>('');
+  
+  return (
+    <div>
+      <h1>{title}</h1>
+      {children}
+    </div>
+  );
+}
+```

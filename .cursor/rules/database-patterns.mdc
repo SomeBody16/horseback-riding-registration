@@ -1,0 +1,136 @@
+---
+description: When working with prisma and/or database or when describing data on frontend
+alwaysApply: false
+---
+# Database Patterns and Prisma Best Practices
+
+## Schema Design
+- Follow the existing schema structure in [prisma/schema.prisma](mdc:prisma/schema.prisma)
+- Use descriptive model and field names
+- Include proper relationships between models
+- Use appropriate field types (String, Int, DateTime, etc.)
+
+## Current Models
+### Slot Model
+- Represents available riding time slots
+- Fields: id, date, startTime, endTime, type, limit
+- Has one-to-many relationship with Registration
+
+### Registration Model
+- Represents user registrations for slots
+- Fields: id, email, slotId
+- Belongs to a Slot via foreign key relationship
+
+## Prisma Client Usage
+- Import Prisma client from `@/prisma/generated/client`
+- Use generated types for type safety
+- Always handle database errors gracefully
+- Use transactions for operations that modify multiple records
+
+## Database Operations
+- Use `prisma.slot.findMany()` for querying slots
+- Use `prisma.registration.create()` for creating registrations
+- Use `prisma.registration.findMany()` for querying registrations
+- Include related data with `include` option when needed
+
+## Environment Setup
+- Database URL is configured in [.env](mdc:.env)
+- Use Docker Compose for local development: `yarn db:up`
+- Run migrations with: `yarn db:push`
+- Generate client with: `yarn db:generate`
+
+## Example Database Operations
+```typescript
+import { PrismaClient } from '@/prisma/generated/client';
+
+const prisma = new PrismaClient();
+
+// Get all slots with registrations
+const slotsWithRegistrations = await prisma.slot.findMany({
+  include: {
+    registrations: true
+  }
+});
+
+// Create a new registration
+const registration = await prisma.registration.create({
+  data: {
+    email: 'user@example.com',
+    slotId: 1
+  }
+});
+```
+
+## Best Practices
+- Always validate data before database operations
+- Use proper error handling for database queries
+- Consider using Prisma's built-in validation
+- Keep database operations in separate service files
+- Use proper indexing for frequently queried fields
+
+# Database Patterns and Prisma Best Practices
+
+## Schema Design
+- Follow the existing schema structure in [prisma/schema.prisma](mdc:prisma/schema.prisma)
+- Use descriptive model and field names
+- Include proper relationships between models
+- Use appropriate field types (String, Int, DateTime, etc.)
+
+## Current Models
+### Slot Model
+- Represents available riding time slots
+- Fields: id, date, startTime, endTime, type, limit
+- Has one-to-many relationship with Registration
+
+### Registration Model
+- Represents user registrations for slots
+- Fields: id, email, slotId
+- Belongs to a Slot via foreign key relationship
+
+## Prisma Client Usage
+- Import Prisma client from `@/prisma/generated/client`
+- Use generated types for type safety
+- Always handle database errors gracefully
+- Use transactions for operations that modify multiple records
+
+## Database Operations
+- Use `prisma.slot.findMany()` for querying slots
+- Use `prisma.registration.create()` for creating registrations
+- Use `prisma.registration.findMany()` for querying registrations
+- Include related data with `include` option when needed
+
+## Environment Setup
+- Database URL is configured in [.env](mdc:.env)
+- Use Docker Compose for local development: `yarn db:up`
+- Run migrations with: `yarn db:push`
+- Generate client with: `yarn db:generate`
+
+## Example Database Operations
+```typescript
+import { PrismaClient } from '@/prisma/generated/client';
+
+const prisma = new PrismaClient();
+
+// Get all slots with registrations
+const slotsWithRegistrations = await prisma.slot.findMany({
+  include: {
+    registrations: true
+  }
+});
+
+// Create a new registration
+const registration = await prisma.registration.create({
+  data: {
+    email: 'user@example.com',
+    slotId: 1
+  }
+});
+```
+
+## Best Practices
+- Always validate data before database operations
+- Use proper error handling for database queries
+- Consider using Prisma's built-in validation
+- Keep database operations in separate service files
+- Use proper indexing for frequently queried fields
+

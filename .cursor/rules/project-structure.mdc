@@ -1,0 +1,92 @@
+---
+description: When need to know where to put files and where to find stuff
+alwaysApply: false
+---
+# Horseback Riding Registration Project Structure
+
+This is a Next.js 15 application with TypeScript, Prisma ORM, and Mantine UI components for managing horseback riding registrations.
+
+## Key Files and Directories
+
+### Core Application
+- [src/app/layout.tsx](mdc:src/app/layout.tsx) - Root layout with Mantine provider setup
+- [src/app/page.tsx](mdc:src/app/page.tsx) - Main application page
+- [src/app/theme.ts](mdc:src/app/theme.ts) - Mantine theme configuration
+- [src/app/globals.css](mdc:src/app/globals.css) - Global styles
+
+### Components
+All components are in [src/component/](mdc:src/component/) directory:
+- [FormContainer.tsx](mdc:src/component/FormContainer.tsx) - Main form wrapper
+- [StepForm.tsx](mdc:src/component/StepForm.tsx) - Form step management
+- [StepSlots.tsx](mdc:src/component/StepSlots.tsx) - Slot selection component
+- [StepSlots.date.tsx](mdc:src/component/StepSlots.date.tsx) - Date selection
+- [StepSlots.time.tsx](mdc:src/component/StepSlots.time.tsx) - Time selection
+- [StepConfirm.tsx](mdc:src/component/StepConfirm.tsx) - Confirmation step
+
+### Database
+- [prisma/schema.prisma](mdc:prisma/schema.prisma) - Database schema with Slot and Registration models
+- [prisma/generated/](mdc:prisma/generated/) - Generated Prisma client
+
+### Configuration
+- [package.json](mdc:package.json) - Dependencies and scripts
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration with path aliases
+- [next.config.ts](mdc:next.config.ts) - Next.js configuration
+- [compose.yml](mdc:compose.yml) - Docker Compose for database
+- [.env](mdc:.env) - Environment variables
+
+## Path Aliases
+- `@/*` maps to `./src/*`
+- `@/prisma/*` maps to `./prisma/*`
+
+## Tech Stack
+- Next.js 15 with App Router
+- TypeScript
+- Prisma ORM with PostgreSQL
+- Mantine UI components
+- Tailwind CSS
+- Yarn package manager
+
+# Horseback Riding Registration Project Structure
+
+This is a Next.js 15 application with TypeScript, Prisma ORM, and Mantine UI components for managing horseback riding registrations.
+
+## Key Files and Directories
+
+### Core Application
+- [src/app/layout.tsx](mdc:src/app/layout.tsx) - Root layout with Mantine provider setup
+- [src/app/page.tsx](mdc:src/app/page.tsx) - Main application page
+- [src/app/theme.ts](mdc:src/app/theme.ts) - Mantine theme configuration
+- [src/app/globals.css](mdc:src/app/globals.css) - Global styles
+
+### Components
+All components are in [src/component/](mdc:src/component/) directory:
+- [FormContainer.tsx](mdc:src/component/FormContainer.tsx) - Main form wrapper
+- [StepForm.tsx](mdc:src/component/StepForm.tsx) - Form step management
+- [StepSlots.tsx](mdc:src/component/StepSlots.tsx) - Slot selection component
+- [StepSlots.date.tsx](mdc:src/component/StepSlots.date.tsx) - Date selection
+- [StepSlots.time.tsx](mdc:src/component/StepSlots.time.tsx) - Time selection
+- [StepConfirm.tsx](mdc:src/component/StepConfirm.tsx) - Confirmation step
+
+### Database
+- [prisma/schema.prisma](mdc:prisma/schema.prisma) - Database schema with Slot and Registration models
+- [prisma/generated/](mdc:prisma/generated/) - Generated Prisma client
+
+### Configuration
+- [package.json](mdc:package.json) - Dependencies and scripts
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration with path aliases
+- [next.config.ts](mdc:next.config.ts) - Next.js configuration
+- [compose.yml](mdc:compose.yml) - Docker Compose for database
+- [.env](mdc:.env) - Environment variables
+
+## Path Aliases
+- `@/*` maps to `./src/*`
+- `@/prisma/*` maps to `./prisma/*`
+
+## Tech Stack
+- Next.js 15 with App Router
+- TypeScript
+- Prisma ORM with PostgreSQL
+- Mantine UI components
+- Tailwind CSS
+- Yarn package manager
+

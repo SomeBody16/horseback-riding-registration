@@ -1,0 +1,27 @@
+name: horse-riding-registration
+
+services:
+  database:
+    image: postgres:15
+    container_name: horse-riding-registration__database
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - "5432:5432"
+    volumes:
+      - database:/var/lib/postgresql/data
+
+  web:
+    container_name: horse-riding-registration__web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+
+volumes:
+  database:
