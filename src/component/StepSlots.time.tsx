@@ -1,61 +1,51 @@
+import { useEffect, useMemo } from "react";
 import { Slot } from "@/prisma/generated";
 import { Group, Radio, ScrollArea, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useMappedState } from "@/hooks/useMappedState";
 
-export type StepSlotsTime = {
+export type StepSlotsTimeProps = {
 	slots: Slot[];
-	selectedDate: Date;
+	selectedDate: Date | undefined;
+	value: Slot | undefined;
 	onChange: (value: Slot | undefined) => void;
 };
 
-export function StepSlotsTime({
-	slots,
-	selectedDate,
-	onChange,
-}: StepSlotsTime) {
+export function StepSlotsTime(props: StepSlotsTimeProps) {
 	const availableSlots = useMemo(() => {
-		if (!selectedDate) return [];
-		return slots.filter((slot) => dayjs(slot.date).isSame(selectedDate, "day"));
-	}, [selectedDate]);
+		if (!props.selectedDate) return [];
+		return props.slots.filter((slot) =>
+			dayjs(slot.date).isSame(props.selectedDate, "day")
+		);
+	}, [props.selectedDate, props.slots]);
 
-	const [value, setValue] = useState<string | undefined>();
+	const [value, setValue] = useMappedState<Slot | undefined, string>(
+		props.value?.id?.toString(),
+		(value) => props.slots.find((slot) => slot.id.toString() === value)
+	);
 	useEffect(() => {
-		const slot = slots.find((slot) => slot.id.toString() === value);
-		onChange(slot);
-	}, [value]);
+		props.onChange(value);
+	}, [value, props]);
 
 	return (
-		<div>
-			<Radio.Group value={value} onChange={setValue}>
-				<ScrollArea h={250}>
-					<Stack gap="xs" className="pt-2">
-						{availableSlots.map((slot) => (
-							<Radio.Card
-								key={slot.id}
-								radius="md"
-								value={slot.id.toString()}
-								className="hover:bg-white"
-							>
-								<Group
-									wrap="nowrap"
-									align="flex-start"
-									gap="xs"
-									className="p-2"
-								>
-									<Radio.Indicator />
-									<div>
-										<Text size="sm" fw={700}>
-											{slot.startTime} - {slot.endTime}
-										</Text>
-										<Text c="gray.6">{slot.type}</Text>
-									</div>
-								</Group>
-							</Radio.Card>
-						))}
-					</Stack>
-				</ScrollArea>
-			</Radio.Group>
-		</div>
+		<Radio.Group value={value?.id.toString()} onChange={setValue}>
+			<ScrollArea h={250}>
+				<Stack gap="xs" pt="xs">
+					{availableSlots.map((slot) => (
+						<Radio.Card key={slot.id} radius="md" value={slot.id.toString()}>
+							<Group wrap="nowrap" align="flex-start" gap="xs" p="xs">
+								<Radio.Indicator />
+								<div>
+									<Text size="sm" fw={700}>
+										{slot.startTime} - {slot.endTime}
+									</Text>
+									<Text c="gray.6">{slot.type}</Text>
+								</div>
+							</Group>
+						</Radio.Card>
+					))}
+				</Stack>
+			</ScrollArea>
+		</Radio.Group>
 	);
 }
