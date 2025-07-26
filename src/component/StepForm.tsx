@@ -1,64 +1,62 @@
+import { useEffect } from "react";
 import {
-	Fieldset,
-	Button,
-	Anchor,
-	Checkbox,
-	Stack,
-	TextInput,
+  Fieldset,
+  Button,
+  Stack,
+  TextInput,
+  Group,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { useEffect, useState } from "react";
 
 /**
  * Check if the email is valid and contains @cisco.com
  */
 const isEmailValid = (email: string) => {
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test(email) && email.endsWith("@cisco.com");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.endsWith("@cisco.com");
 };
 
 export type StepFormProps = {
-	onEmailChange: (email: string) => void;
-	onPrev: () => void;
-	onNext: () => void;
+  onEmailChange: (email: string) => void;
+  onPrev: () => void;
+  onNext: () => void;
 };
 
 export function StepForm({ onEmailChange, onPrev, onNext }: StepFormProps) {
-	const [email, setEmail] = useLocalStorage({
-		key: "cisco-email",
-		defaultValue: "",
-	});
-	useEffect(() => {
-		onEmailChange(email || "");
-	}, [email]);
+  const [email, setEmail] = useLocalStorage({
+    key: "cisco-email",
+    defaultValue: "",
+  });
 
-	const emailError = email
-		? !isEmailValid(email)
-			? "Invalid email address"
-			: undefined
-		: undefined;
+  useEffect(() => {
+    onEmailChange(email || "");
+  }, [email, onEmailChange]);
 
-	return (
-		<Fieldset className="flex flex-col gap-6 w-2xl">
-			<Stack gap="xl">
-				<TextInput
-					label="E-mail address"
-					description="Please enter your Cisco E-mail"
-					required
-					placeholder="example@cisco.com"
-					value={email || ""}
-					onChange={(e) => setEmail(e.target.value)}
-					error={emailError}
-				/>
-			</Stack>
-			<div className="flex justify-between gap-4">
-				<Button variant="outline" className="w-2xl" onClick={onPrev}>
-					Back
-				</Button>
-				<Button className="w-2xl" onClick={onNext} disabled={!email}>
-					Next
-				</Button>
-			</div>
-		</Fieldset>
-	);
+  const emailError = email && !isEmailValid(email) 
+    ? "Invalid email address" 
+    : undefined;
+
+  return (
+    <Fieldset>
+      <Stack gap="xl">
+        <TextInput
+          label="E-mail address"
+          description="Please enter your Cisco E-mail"
+          required
+          placeholder="example@cisco.com"
+          value={email || ""}
+          onChange={(e) => setEmail(e.target.value)}
+          error={emailError}
+        />
+        <Group justify="space-between">
+          <Button variant="outline" onClick={onPrev}>
+            Back
+          </Button>
+          <Button onClick={onNext} disabled={!email}>
+            Next
+          </Button>
+        </Group>
+      </Stack>
+    </Fieldset>
+  );
 }
