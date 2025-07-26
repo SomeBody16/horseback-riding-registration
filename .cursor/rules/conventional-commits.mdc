@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+
+# Conventional Commits
+
+## Git Commit Messages
+When committing to git, follow conventional commits guidance:
+- Use short, descriptive commit messages (under 72 characters)
+- Follow the format: `<type>(<scope>): <description>`
+- Common types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Examples:
+  - `feat(auth): add user registration form`
+  - `fix(ui): resolve button alignment issue`
+  - `docs(readme): update installation instructions`
+  - `refactor(api): simplify user validation logic`
+- Avoid long, verbose commit messages
+- Use present tense ("add" not "added")
+- Use imperative mood ("move" not "moves")
+
+## Commit Message Examples
+✅ Good:
+- `feat(booking): add horseback riding registration form`
+- `fix(database): resolve user table migration issue`
+- `docs(setup): update development environment guide`
+
+❌ Avoid:
+- `Fixed a bug where users couldn't register for horseback riding lessons because the form validation was broken and the database connection was failing`
+- `Updated various things and made some improvements to the codebase` 
+
