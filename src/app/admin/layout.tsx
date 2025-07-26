@@ -23,9 +23,9 @@ export default function AdminLayout({
     },
     {
       label: 'Slots Management',
-      href: '/admin/slots',
+      href: '/admin/slot',
       icon: IconCalendarTime,
-      active: pathname.startsWith('/admin/slots'),
+      active: pathname.startsWith('/admin/slot'),
     },
   ];
 

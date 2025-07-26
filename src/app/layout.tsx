@@ -15,20 +15,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript defaultColorScheme="dark" />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
-        />
-      </head>
-      <body className="antialiased">
-        <MantineProvider theme={theme} defaultColorScheme="dark" withGlobalClasses>
-          <Notifications />
-          {children}
-        </MantineProvider>
-      </body>
-    </html>
-  );
+		<html lang="en" {...mantineHtmlProps}>
+			<head>
+				<ColorSchemeScript defaultColorScheme="dark" />
+				<meta
+					name="viewport"
+					content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+				/>
+			</head>
+			<body className="antialiased">
+				<MantineProvider
+					theme={theme}
+					defaultColorScheme="dark"
+					withGlobalClasses
+				>
+					<Notifications position="bottom-left" />
+					{children}
+				</MantineProvider>
+			</body>
+		</html>
+	);
 }

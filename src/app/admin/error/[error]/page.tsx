@@ -70,7 +70,7 @@ export default async function AdminErrorPage({ params }: AdminErrorPageProps) {
               </Button>
               <Button
                 component={Link}
-                href="/admin/slots"
+                href="/admin/slot"
                 variant="light"
                 color="blue"
               >
