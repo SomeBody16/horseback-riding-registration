@@ -10,10 +10,11 @@ const errorRedirect = (error: string) => {
 }
 
 const parseFormData = (formData: FormData) => {
-	const email = formData.get("cisco-email") as string;
+	const firstName = formData.get("first-name") as string;
+	const lastName = formData.get("last-name") as string;
 	const slotId = formData.get("slot-id") as string;
 
-	if (!email || !slotId) {
+	if (!firstName || !lastName || !slotId) {
 		throw new Error("Missing required fields");
 	}
 
@@ -22,7 +23,7 @@ const parseFormData = (formData: FormData) => {
 		throw new Error("Invalid slot ID");
 	}
 
-	return { email, slotId: slotIdNumber };
+	return { firstName, lastName, slotId: slotIdNumber };
 }
 
 const assertSlotExists = async (slotId: number) => {
@@ -47,7 +48,7 @@ const assertSlotHasCapacity = async (slot: Slot & { registrations: Registration[
 }
 
 export const handleRegistration = async (formData: FormData) => {
-	const { email, slotId } = parseFormData(formData);
+	const { firstName, lastName, slotId } = parseFormData(formData);
 
 	const slot = await assertSlotExists(slotId);
 	await assertSlotHasCapacity(slot);
@@ -55,7 +56,8 @@ export const handleRegistration = async (formData: FormData) => {
 	// Create the registration
 	await prisma.registration.create({
 		data: {
-			email,
+			firstName,
+			lastName,
 			slotId,
 		},
 	});

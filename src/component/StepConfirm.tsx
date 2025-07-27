@@ -14,11 +14,12 @@ import dayjs from "dayjs";
 
 export type StepConfirmProps = {
 	selectedSlot: Slot;
-	email: string;
+	firstName: string;
+	lastName: string;
 	onPrev: () => void;
 };
 
-export function StepConfirm({ onPrev, selectedSlot, email }: StepConfirmProps) {
+export function StepConfirm({ onPrev, selectedSlot, firstName, lastName }: StepConfirmProps) {
 	const date = dayjs(selectedSlot.date);
 	const formattedDate = date.format("DD.MM.YYYY");
 	const weekDay = date.format("dddd");
@@ -26,12 +27,14 @@ export function StepConfirm({ onPrev, selectedSlot, email }: StepConfirmProps) {
 	return (
 		<form action={handleRegistration}>
 			<Fieldset>
-				<input type="hidden" name="cisco-email" value={email} />
+				<input type="hidden" name="first-name" value={firstName} />
+				<input type="hidden" name="last-name" value={lastName} />
 				<input type="hidden" name="slot-id" value={selectedSlot.id} />
 				<Stack gap="xl">
 					<Fieldset legend="Registration">
 						<Stack gap="md">
-							<TextInput readOnly label="Cisco E-mail" value={email} />
+							<TextInput readOnly label="First Name" value={firstName} />
+							<TextInput readOnly label="Last Name" value={lastName} />
 							<TextInput
 								readOnly
 								label="Slot"

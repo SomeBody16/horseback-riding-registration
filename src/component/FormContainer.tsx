@@ -14,7 +14,8 @@ export type FormContainerProps = {
 export function FormContainer({ slots }: FormContainerProps) {
 	const [step, setStep] = useState(0);
 	const [selectedSlot, setSelectedSlot] = useState<Slot | undefined>();
-	const [email, setEmail] = useState<string>("");
+	const [firstName, setFirstName] = useState<string>("");
+	const [lastName, setLastName] = useState<string>("");
 
 	return (
 		<Container size="md" mt="xl">
@@ -29,7 +30,8 @@ export function FormContainer({ slots }: FormContainerProps) {
 				</Stepper.Step>
 				<Stepper.Step label="Fill" description="Your information">
 					<StepForm
-						onEmailChange={setEmail}
+						onFirstNameChange={setFirstName}
+						onLastNameChange={setLastName}
 						onPrev={() => setStep(0)}
 						onNext={() => setStep(2)}
 					/>
@@ -38,7 +40,8 @@ export function FormContainer({ slots }: FormContainerProps) {
 					<StepConfirm
 						onPrev={() => setStep(1)}
 						selectedSlot={selectedSlot!}
-						email={email}
+						firstName={firstName}
+						lastName={lastName}
 					/>
 				</Stepper.Step>
 			</Stepper>

@@ -145,7 +145,7 @@ export default async function SlotDetailsPage({
 												radius="sm"
 												withBorder
 											>
-												<Text>{registration.email}</Text>
+												<Text>{registration.firstName} {registration.lastName}</Text>
 											</Card>
 										))}
 									</Stack>
