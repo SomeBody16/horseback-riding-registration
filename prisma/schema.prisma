@@ -20,8 +20,9 @@ model Slot {
 }
 
 model Registration {
-  id    Int    @id @default(autoincrement())
-  email String
+  id        Int    @id @default(autoincrement())
+  firstName String
+  lastName  String
 
   slotId Int
   slot   Slot @relation(fields: [slotId], references: [id])

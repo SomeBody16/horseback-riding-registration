@@ -8,45 +8,51 @@ import {
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
-/**
- * Check if the email is valid and contains @cisco.com
- */
-const isEmailValid = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email) && email.endsWith("@cisco.com");
-};
-
 export type StepFormProps = {
-	onEmailChange: (email: string) => void;
+	onFirstNameChange: (firstName: string) => void;
+	onLastNameChange: (lastName: string) => void;
 	onPrev: () => void;
 	onNext: () => void;
 };
 
 export function StepForm(props: StepFormProps) {
-	const [email, setEmail] = useLocalStorage({
-		key: "cisco-email",
+	const [firstName, setFirstName] = useLocalStorage({
+		key: "user-first-name",
+		defaultValue: "",
+	});
+
+	const [lastName, setLastName] = useLocalStorage({
+		key: "user-last-name",
 		defaultValue: "",
 	});
 
 	useEffect(() => {
-		props.onEmailChange(email || "");
-	}, [email, props]);
+		props.onFirstNameChange(firstName || "");
+	}, [firstName, props]);
 
-	const emailError =
-		email && !isEmailValid(email) ? "Invalid email address" : undefined;
+	useEffect(() => {
+		props.onLastNameChange(lastName || "");
+	}, [lastName, props]);
 
 	return (
 		<>
 			<Fieldset style={{ width: 600 }}>
 				<Stack gap="xl">
 					<TextInput
-						label="E-mail address"
-						description="Please enter your Cisco E-mail"
+						label="First Name"
+						description="Please enter your first name"
 						required
-						placeholder="example@cisco.com"
-						value={email || ""}
-						onChange={(e) => setEmail(e.target.value)}
-						error={emailError}
+						placeholder="John"
+						value={firstName || ""}
+						onChange={(e) => setFirstName(e.target.value)}
+					/>
+					<TextInput
+						label="Last Name"
+						description="Please enter your last name"
+						required
+						placeholder="Doe"
+						value={lastName || ""}
+						onChange={(e) => setLastName(e.target.value)}
 					/>
 				</Stack>
 			</Fieldset>
@@ -54,7 +60,7 @@ export function StepForm(props: StepFormProps) {
 				<Button variant="outline" onClick={props.onPrev}>
 					Back
 				</Button>
-				<Button onClick={props.onNext} disabled={!email}>
+				<Button onClick={props.onNext} disabled={!firstName || !lastName}>
 					Next
 				</Button>
 			</Group>

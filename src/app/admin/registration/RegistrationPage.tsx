@@ -55,7 +55,7 @@ export function RegistrationPage({ slots }: RegistrationPageProps) {
 					.map((slot) => {
 						const registrations = slot.registrations || [];
 						return registrations
-							.map((reg) => `${slot.startTime} - ${reg.email}`)
+							.map((reg) => `${slot.startTime} - ${reg.firstName} ${reg.lastName}`)
 							.join("\n");
 					})
 					.filter(Boolean)
