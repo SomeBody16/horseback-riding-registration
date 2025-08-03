@@ -8,12 +8,15 @@ import {
 	Stack,
 	Text,
 	Divider,
+	Flex,
 } from "@mantine/core";
 import { notFound } from "next/navigation";
 import { IconArrowLeft, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { getSlot } from "@/action/slots";
 import { format } from "date-fns";
+import { DatePicker } from "@mantine/dates";
+import { SlotCalendarDisplay } from "./SlotCalendarDisplay";
 
 interface SlotDetailsPageProps {
 	params: Promise<{
@@ -64,69 +67,73 @@ export default async function SlotDetailsPage({
 
 						<Divider />
 
-						{/* Details Grid */}
-						<Stack gap="md">
-							<Group>
-								<Text fw={500} w={120}>
-									Date:
-								</Text>
-								<Text>{format(slot.date, "dd/MM/yyyy")}</Text>
-							</Group>
+						<Flex justify={"space-between"}>
+							{/* Details Grid */}
+							<Stack gap="md">
+								<Group>
+									<Text fw={500} w={120}>
+										Date:
+									</Text>
+									<Text>{format(slot.date, "dd/MM/yyyy")}</Text>
+								</Group>
 
-							<Group>
-								<Text fw={500} w={120}>
-									Time:
-								</Text>
-								<Text>
-									{slot.startTime} - {slot.endTime}
-								</Text>
-							</Group>
+								<Group>
+									<Text fw={500} w={120}>
+										Time:
+									</Text>
+									<Text>
+										{slot.startTime} - {slot.endTime}
+									</Text>
+								</Group>
 
-							<Group>
-								<Text fw={500} w={120}>
-									Type:
-								</Text>
-								<Text>{slot.type}</Text>
-							</Group>
+								<Group>
+									<Text fw={500} w={120}>
+										Type:
+									</Text>
+									<Text>{slot.type}</Text>
+								</Group>
 
-							<Group>
-								<Text fw={500} w={120}>
-									Limit:
-								</Text>
-								<Text>{slot.limit} participants</Text>
-							</Group>
+								<Group>
+									<Text fw={500} w={120}>
+										Limit:
+									</Text>
+									<Text>{slot.limit} participants</Text>
+								</Group>
 
-							<Group>
-								<Text fw={500} w={120}>
-									Registrations:
-								</Text>
-								<Badge
-									variant="light"
-									color={
-										slot.registrations.length >= slot.limit ? "red" : "green"
-									}
-									size="md"
-								>
-									{slot.registrations.length}/{slot.limit}
-								</Badge>
-							</Group>
+								<Group>
+									<Text fw={500} w={120}>
+										Registrations:
+									</Text>
+									<Badge
+										variant="light"
+										color={
+											slot.registrations.length >= slot.limit ? "red" : "green"
+										}
+										size="md"
+									>
+										{slot.registrations.length}/{slot.limit}
+									</Badge>
+								</Group>
 
-							<Group>
-								<Text fw={500} w={120}>
-									Status:
-								</Text>
-								<Badge
-									variant="light"
-									color={
-										slot.registrations.length >= slot.limit ? "red" : "green"
-									}
-								>
-									{slot.registrations.length >= slot.limit
-										? "Full"
-										: "Available"}
-								</Badge>
-							</Group>
-						</Stack>
+								<Group>
+									<Text fw={500} w={120}>
+										Status:
+									</Text>
+									<Badge
+										variant="light"
+										color={
+											slot.registrations.length >= slot.limit ? "red" : "green"
+										}
+									>
+										{slot.registrations.length >= slot.limit
+											? "Full"
+											: "Available"}
+									</Badge>
+								</Group>
+							</Stack>
+
+							<SlotCalendarDisplay slot={slot} />
+						</Flex>
 
 						{/* Registrations List */}
 						{slot.registrations.length > 0 && (
@@ -145,7 +152,9 @@ export default async function SlotDetailsPage({
 												radius="sm"
 												withBorder
 											>
-												<Text>{registration.firstName} {registration.lastName}</Text>
+												<Text>
+													{registration.firstName} {registration.lastName}
+												</Text>
 											</Card>
 										))}
 									</Stack>

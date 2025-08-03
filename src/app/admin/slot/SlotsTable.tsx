@@ -1,7 +1,7 @@
 "use client";
 
 import { Registration, Slot } from "@/prisma/generated";
-import { Table, Badge, Group, ActionIcon } from "@mantine/core";
+import { Table, Badge, Group, ActionIcon, Anchor } from "@mantine/core";
 import { IconEye, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -20,7 +20,6 @@ export default function SlotsTable({ slots }: SlotsTableProps) {
 						<Table.Th>Date</Table.Th>
 						<Table.Th>Time</Table.Th>
 						<Table.Th>Type</Table.Th>
-						<Table.Th>Limit</Table.Th>
 						<Table.Th>Registrations</Table.Th>
 						<Table.Th>Actions</Table.Th>
 					</Table.Tr>
@@ -29,7 +28,11 @@ export default function SlotsTable({ slots }: SlotsTableProps) {
 					{slots.map((slot) => (
 						<Table.Tr key={slot.id}>
 							<Table.Td>{slot.id}</Table.Td>
-							<Table.Td>{format(slot.date, "dd/MM/yyyy")}</Table.Td>
+							<Table.Td>
+								<Anchor href={`/admin/slot/${slot.id}`}>
+									{format(slot.date, "EEEE, MMMM do, yyyy")}
+								</Anchor>
+							</Table.Td>
 							<Table.Td>
 								{slot.startTime} - {slot.endTime}
 							</Table.Td>
@@ -38,7 +41,6 @@ export default function SlotsTable({ slots }: SlotsTableProps) {
 									{slot.type}
 								</Badge>
 							</Table.Td>
-							<Table.Td>{slot.limit}</Table.Td>
 							<Table.Td>
 								<Badge
 									variant="light"
