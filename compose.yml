@@ -6,8 +6,6 @@ services:
     container_name: horse-riding-registration__database
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    ports:
-      - "5432:5432"
     volumes:
       - database:/var/lib/postgresql/data
 
