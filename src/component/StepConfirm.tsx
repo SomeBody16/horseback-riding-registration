@@ -11,6 +11,7 @@ import {
 	TextInput,
 } from "@mantine/core";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 export type StepConfirmProps = {
 	selectedSlot: Slot;
@@ -19,10 +20,17 @@ export type StepConfirmProps = {
 	onPrev: () => void;
 };
 
-export function StepConfirm({ onPrev, selectedSlot, firstName, lastName }: StepConfirmProps) {
+export function StepConfirm({
+	onPrev,
+	selectedSlot,
+	firstName,
+	lastName,
+}: StepConfirmProps) {
 	const date = dayjs(selectedSlot.date);
 	const formattedDate = date.format("DD.MM.YYYY");
 	const weekDay = date.format("dddd");
+
+	const [confirmed, setConfirmed] = useState(false);
 
 	return (
 		<form action={handleRegistration}>
@@ -45,6 +53,8 @@ export function StepConfirm({ onPrev, selectedSlot, firstName, lastName }: StepC
 
 					<Checkbox
 						required
+						checked={confirmed}
+						onChange={() => setConfirmed(!confirmed)}
 						label={
 							<>
 								Please confirm that you have read and understood the pinned
@@ -66,7 +76,9 @@ export function StepConfirm({ onPrev, selectedSlot, firstName, lastName }: StepC
 				<Button variant="outline" onClick={onPrev}>
 					Back
 				</Button>
-				<Button type="submit">Submit</Button>
+				<Button type="submit" disabled={!confirmed}>
+					Submit
+				</Button>
 			</Group>
 		</form>
 	);
