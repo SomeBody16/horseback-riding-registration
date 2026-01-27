@@ -1,18 +1,31 @@
 "use client";
 
 import { Registration, Slot } from "@/prisma/generated";
-import { Table, Badge, Group, ActionIcon, Anchor } from "@mantine/core";
+import { Table, Badge, Group, ActionIcon, Anchor, Pagination, Stack, Text } from "@mantine/core";
 import { IconEye, IconTrash } from "@tabler/icons-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export type SlotsTableProps = {
-	slots: (Slot & { registrations: Registration[] })[];
-};
+export interface SlotsTableProps {
+	readonly slots: (Slot & { registrations: Registration[] })[];
+	readonly totalPages: number;
+	readonly currentPage: number;
+	readonly totalCount: number;
+}
 
-export default function SlotsTable({ slots }: SlotsTableProps) {
+export default function SlotsTable({ slots, totalPages, currentPage, totalCount }: SlotsTableProps) {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	const handlePageChange = (page: number): void => {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("page", page.toString());
+		router.push(`/admin/slot?${params.toString()}`);
+	};
+
 	return (
-		<>
+		<Stack gap="md">
 			<Table striped highlightOnHover withTableBorder withColumnBorders>
 				<Table.Thead>
 					<Table.Tr>
@@ -91,6 +104,19 @@ export default function SlotsTable({ slots }: SlotsTableProps) {
 					</Table.Tbody>
 				</Table>
 			)}
-		</>
+
+			{totalPages > 1 && (
+				<Group justify="space-between" align="center">
+					<Text size="sm" c="dimmed">
+						Showing {slots.length} of {totalCount} slots
+					</Text>
+					<Pagination
+						total={totalPages}
+						value={currentPage}
+						onChange={handlePageChange}
+					/>
+				</Group>
+			)}
+		</Stack>
 	);
 }

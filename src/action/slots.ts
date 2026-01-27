@@ -49,18 +49,30 @@ export const deleteSlot = async (formData: FormData) => {
 	redirect("/admin/slot");
 };
 
-export const getSlots = async () => {
+export const getSlots = async (page: number = 1, pageSize: number = 10) => {
   try {
-    const slots = await prisma.slot.findMany({
-      include: {
-        registrations: true,
-      },
-      orderBy: {
-        date: 'desc',
-      },
-    });
+    const skip = (page - 1) * pageSize;
 
-    return slots;
+    const [slots, totalCount] = await Promise.all([
+      prisma.slot.findMany({
+        include: {
+          registrations: true,
+        },
+        orderBy: {
+          date: 'desc',
+        },
+        skip,
+        take: pageSize,
+      }),
+      prisma.slot.count(),
+    ]);
+
+    return {
+      slots,
+      totalCount,
+      totalPages: Math.ceil(totalCount / pageSize),
+      currentPage: page,
+    };
   } catch (error) {
     console.error("Error fetching slots:", error);
     throw new Error("Failed to fetch slots");

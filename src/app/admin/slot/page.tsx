@@ -4,8 +4,14 @@ import Link from "next/link";
 import { getSlots } from "@/action/slots";
 import SlotsTable from "@/app/admin/slot/SlotsTable";
 
-export default async function SlotsManagementPage() {
-	const slots = await getSlots();
+interface SlotsManagementPageProps {
+	searchParams: Promise<{ page?: string }>;
+}
+
+export default async function SlotsManagementPage({ searchParams }: SlotsManagementPageProps) {
+	const params = await searchParams;
+	const page = Math.max(1, parseInt(params.page || "1", 10));
+	const { slots, totalPages, currentPage, totalCount } = await getSlots(page);
 
 	return (
 		<Container size="xl">
@@ -24,7 +30,12 @@ export default async function SlotsManagementPage() {
 				</Group>
 
 				{/* Slots Table */}
-				<SlotsTable slots={slots} />
+				<SlotsTable
+					slots={slots}
+					totalPages={totalPages}
+					currentPage={currentPage}
+					totalCount={totalCount}
+				/>
 			</Stack>
 		</Container>
 	);
