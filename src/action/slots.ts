@@ -56,7 +56,7 @@ export const getSlots = async () => {
         registrations: true,
       },
       orderBy: {
-        date: 'asc',
+        date: 'desc',
       },
     });
 
