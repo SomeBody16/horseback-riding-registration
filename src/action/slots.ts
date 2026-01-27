@@ -79,6 +79,24 @@ export const getSlots = async (page: number = 1, pageSize: number = 10) => {
   }
 };
 
+export const getAllSlots = async () => {
+  try {
+    const slots = await prisma.slot.findMany({
+      include: {
+        registrations: true,
+      },
+      orderBy: {
+        date: 'desc',
+      },
+    });
+
+    return slots;
+  } catch (error) {
+    console.error("Error fetching slots:", error);
+    throw new Error("Failed to fetch slots");
+  }
+};
+
 export const getSlot = async (id: string) => {
   try {
     const slotId = parseInt(id, 10);
@@ -99,3 +117,67 @@ export const getSlot = async (id: string) => {
     return null;
   }
 };
+
+export const updateSlot = NotificationAction.create(async (_, formData) => {
+  const slotId = parseInt(formData.get("slotId") as string, 10);
+  if (isNaN(slotId)) {
+    throw NotificationAction.error({
+      title: "Invalid slot ID",
+      message: "Could not update slot",
+      color: "red",
+    });
+  }
+
+  const data = parseSlotFormData(formData);
+  await prisma.slot.update({
+    where: { id: slotId },
+    data,
+  });
+
+  redirect(`/admin/slot/${slotId}`);
+});
+
+export const removeRegistration = async (formData: FormData) => {
+  const registrationId = parseInt(formData.get("registrationId") as string, 10);
+  const slotId = formData.get("slotId") as string;
+
+  if (isNaN(registrationId)) {
+    throw new Error("Invalid registration ID");
+  }
+
+  await prisma.registration.delete({
+    where: { id: registrationId },
+  });
+
+  redirect(`/admin/slot/${slotId}/edit`);
+};
+
+export const updateRegistration = NotificationAction.create(async (_, formData) => {
+  const registrationId = parseInt(formData.get("registrationId") as string, 10);
+  const slotId = formData.get("slotId") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+
+  if (isNaN(registrationId)) {
+    throw NotificationAction.error({
+      title: "Invalid registration ID",
+      message: "Could not update registration",
+      color: "red",
+    });
+  }
+
+  if (!firstName || !lastName) {
+    throw NotificationAction.error({
+      title: "Missing required fields",
+      message: "Please fill in first name and last name",
+      color: "red",
+    });
+  }
+
+  await prisma.registration.update({
+    where: { id: registrationId },
+    data: { firstName, lastName },
+  });
+
+  redirect(`/admin/slot/${slotId}/edit`);
+});

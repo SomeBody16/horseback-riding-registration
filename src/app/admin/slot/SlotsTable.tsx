@@ -2,7 +2,7 @@
 
 import { Registration, Slot } from "@/prisma/generated";
 import { Table, Badge, Group, ActionIcon, Anchor, Pagination, Stack, Text } from "@mantine/core";
-import { IconEye, IconTrash } from "@tabler/icons-react";
+import { IconEye, IconTrash, IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -75,6 +75,16 @@ export default function SlotsTable({ slots, totalPages, currentPage, totalCount 
 										title="View details"
 									>
 										<IconEye size="1rem" />
+									</ActionIcon>
+									<ActionIcon
+										component={Link}
+										href={`/admin/slot/${slot.id}/edit`}
+										variant="light"
+										color="yellow"
+										size="sm"
+										title="Edit slot"
+									>
+										<IconEdit size="1rem" />
 									</ActionIcon>
 									<ActionIcon
 										component={Link}

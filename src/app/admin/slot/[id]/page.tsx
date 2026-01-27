@@ -11,11 +11,10 @@ import {
 	Flex,
 } from "@mantine/core";
 import { notFound } from "next/navigation";
-import { IconArrowLeft, IconTrash } from "@tabler/icons-react";
+import { IconArrowLeft, IconTrash, IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { getSlot } from "@/action/slots";
 import { format } from "date-fns";
-import { DatePicker } from "@mantine/dates";
 import { SlotCalendarDisplay } from "./SlotCalendarDisplay";
 
 interface SlotDetailsPageProps {
@@ -165,6 +164,14 @@ export default async function SlotDetailsPage({
 						{/* Action Buttons */}
 						<Divider />
 						<Group justify="flex-end">
+							<Button
+								component={Link}
+								href={`/admin/slot/${id}/edit`}
+								leftSection={<IconEdit size="1rem" />}
+								variant="light"
+							>
+								Edit Slot
+							</Button>
 							<Button
 								component={Link}
 								href={`/admin/slot/${id}/delete`}
