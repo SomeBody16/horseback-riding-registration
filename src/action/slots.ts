@@ -137,6 +137,36 @@ export const updateSlot = NotificationAction.create(async (_, formData) => {
   redirect(`/admin/slot/${slotId}`);
 });
 
+export const copySlotsToNextWeek = async (slotIds: number[]): Promise<{ count: number }> => {
+	if (!slotIds.length) {
+		throw new Error("Select at least one slot to copy");
+	}
+
+	const slots = await prisma.slot.findMany({
+		where: { id: { in: slotIds } },
+	});
+
+	if (slots.length !== slotIds.length) {
+		throw new Error("Some slots were not found");
+	}
+
+	const created = await prisma.$transaction(
+		slots.map((slot) =>
+			prisma.slot.create({
+				data: {
+					date: dayjs(slot.date).add(7, "day").toDate(),
+					startTime: slot.startTime,
+					endTime: slot.endTime,
+					type: slot.type,
+					limit: slot.limit,
+				},
+			})
+		)
+	);
+
+	return { count: created.length };
+};
+
 export const removeRegistration = async (formData: FormData) => {
   const registrationId = parseInt(formData.get("registrationId") as string, 10);
   const slotId = formData.get("slotId") as string;

@@ -1,1 +1,1 @@
-export const slotTypes = ["Beginner", "Group"];
+export const slotTypes = ["Beginner (Polish)", "Beginner (Polish & English)"];
