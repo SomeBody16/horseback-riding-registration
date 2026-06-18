@@ -1,113 +1,76 @@
-import { Container, Title, Text, SimpleGrid, Card, Group, Stack, Skeleton } from '@mantine/core';
-import { IconUsers, IconCalendarTime, IconCheck, IconAlertCircle } from '@tabler/icons-react';
+import { Container, Title, Text, SimpleGrid, Card, Group, Stack } from '@mantine/core';
+import { IconCalendarTime } from '@tabler/icons-react';
+import dayjs from 'dayjs';
+import { getDashboardStats } from '@/action/slots';
+import DashboardDateFilter from './DashboardDateFilter';
+import ParticipantStatsCards from './ParticipantStatsCards';
 
-export default function AdminDashboard() {
+interface AdminDashboardProps {
+  readonly searchParams: Promise<{ from?: string; to?: string }>;
+}
+
+export default async function AdminDashboard({ searchParams }: AdminDashboardProps) {
+  const { from, to } = await searchParams;
+  const fromDate = from ? dayjs(from).startOf('day') : null;
+  const toDate = to ? dayjs(to).endOf('day') : null;
+
+  const { participantCount, uniqueParticipantCount, totalSlots, participants, recentActivity } =
+    await getDashboardStats({
+      from: fromDate?.toDate(),
+      to: toDate?.toDate(),
+    });
+
   return (
     <Container size="xl">
       <Stack gap="xl">
-        {/* Welcome Section */}
-        <div>
-          <Title order={1} mb="xs">Welcome to Admin Dashboard</Title>
-          <Text c="dimmed" size="lg">
-            Manage your horseback riding slots and monitor registrations
-          </Text>
-        </div>
+        <Group justify="flex-end">
+          <DashboardDateFilter from={from ?? null} to={to ?? null} />
+        </Group>
 
-        {/* Statistics Cards */}
-        <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Group>
-              <IconUsers size="2rem" color="var(--mantine-color-blue-6)" />
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Total Slots
-                </Text>
-                <Skeleton height={24} width={60} />
-              </div>
-            </Group>
-          </Card>
-
+        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
+          <ParticipantStatsCards
+            participantCount={participantCount}
+            uniqueParticipantCount={uniqueParticipantCount}
+            participants={participants}
+          />
           <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Group>
               <IconCalendarTime size="2rem" color="var(--mantine-color-green-6)" />
               <div>
                 <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Upcoming Slots
+                  Total Slots
                 </Text>
-                <Skeleton height={24} width={60} />
-              </div>
-            </Group>
-          </Card>
-
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Group>
-              <IconCheck size="2rem" color="var(--mantine-color-teal-6)" />
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Total Registrations
+                <Text size="xl" fw={700}>
+                  {totalSlots}
                 </Text>
-                <Skeleton height={24} width={60} />
-              </div>
-            </Group>
-          </Card>
-
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Group>
-              <IconAlertCircle size="2rem" color="var(--mantine-color-orange-6)" />
-              <div>
-                <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                  Available Slots
-                </Text>
-                <Skeleton height={24} width={60} />
               </div>
             </Group>
           </Card>
         </SimpleGrid>
 
-        {/* Quick Actions */}
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Title order={3} mb="md">Quick Actions</Title>
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
-            <Card shadow="xs" padding="md" radius="sm" withBorder>
-              <Text fw={500} mb="xs">Create New Slot</Text>
-              <Text size="sm" c="dimmed" mb="md">
-                Add a new horseback riding session
-              </Text>
-              <Skeleton height={32} width={100} />
-            </Card>
-
-            <Card shadow="xs" padding="md" radius="sm" withBorder>
-              <Text fw={500} mb="xs">View All Slots</Text>
-              <Text size="sm" c="dimmed" mb="md">
-                Manage existing slots and registrations
-              </Text>
-              <Skeleton height={32} width={100} />
-            </Card>
-
-            <Card shadow="xs" padding="md" radius="sm" withBorder>
-              <Text fw={500} mb="xs">Export Data</Text>
-              <Text size="sm" c="dimmed" mb="md">
-                Download registration reports
-              </Text>
-              <Skeleton height={32} width={100} />
-            </Card>
-          </SimpleGrid>
-        </Card>
-
-        {/* Recent Activity */}
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Title order={3} mb="md">Recent Activity</Title>
-          <Stack gap="md">
-            {[1, 2, 3].map((i) => (
-              <Group key={i} justify="space-between">
-                <div>
-                  <Skeleton height={16} width={200} mb={4} />
-                  <Skeleton height={12} width={150} />
-                </div>
-                <Skeleton height={12} width={80} />
-              </Group>
-            ))}
-          </Stack>
+          {recentActivity.length === 0 ? (
+            <Text c="dimmed" size="sm">No registrations in this range.</Text>
+          ) : (
+            <Stack gap="md">
+              {recentActivity.map((activity) => (
+                <Group key={activity.id} justify="space-between" wrap="nowrap">
+                  <div>
+                    <Text fw={500}>
+                      {activity.firstName} {activity.lastName}
+                    </Text>
+                    <Text size="sm" c="dimmed">
+                      Registered for {activity.slotType}
+                    </Text>
+                  </div>
+                  <Text size="xs" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+                    {dayjs(activity.slotDate).format('MMM D, YYYY')}
+                  </Text>
+                </Group>
+              ))}
+            </Stack>
+          )}
         </Card>
       </Stack>
     </Container>

@@ -79,6 +79,94 @@ export const getSlots = async (page: number = 1, pageSize: number = 10) => {
   }
 };
 
+export interface RecentActivity {
+  id: number;
+  firstName: string;
+  lastName: string;
+  slotType: string;
+  slotDate: Date;
+}
+
+export interface ParticipantSummary {
+  firstName: string;
+  lastName: string;
+  count: number;
+}
+
+export interface DashboardStats {
+  participantCount: number;
+  uniqueParticipantCount: number;
+  totalSlots: number;
+  participants: ParticipantSummary[];
+  recentActivity: RecentActivity[];
+}
+
+export interface DashboardRange {
+  from?: Date;
+  to?: Date;
+}
+
+export const getDashboardStats = async (range: DashboardRange = {}): Promise<DashboardStats> => {
+  try {
+    const slotDateFilter =
+      range.from || range.to
+        ? {
+            ...(range.from ? { gte: range.from } : {}),
+            ...(range.to ? { lte: range.to } : {}),
+          }
+        : undefined;
+
+    const registrationWhere = slotDateFilter ? { slot: { date: slotDateFilter } } : {};
+    const slotWhere = slotDateFilter ? { date: slotDateFilter } : {};
+
+    const [participantCount, groups, totalSlots, recent] = await Promise.all([
+      prisma.registration.count({ where: registrationWhere }),
+      prisma.registration.groupBy({
+        by: ["firstName", "lastName"],
+        where: registrationWhere,
+        _count: { _all: true },
+      }),
+      prisma.slot.count({ where: slotWhere }),
+      prisma.registration.findMany({
+        where: registrationWhere,
+        take: 10,
+        orderBy: { slot: { date: "desc" } },
+        include: { slot: true },
+      }),
+    ]);
+
+    const participants: ParticipantSummary[] = groups
+      .map((group) => ({
+        firstName: group.firstName,
+        lastName: group.lastName,
+        count: group._count._all,
+      }))
+      .sort(
+        (a, b) =>
+          b.count - a.count ||
+          a.firstName.localeCompare(b.firstName) ||
+          a.lastName.localeCompare(b.lastName)
+      );
+
+    return {
+      participantCount,
+      uniqueParticipantCount: groups.length,
+      totalSlots,
+      participants,
+      recentActivity: recent.map((registration) => ({
+        id: registration.id,
+        firstName: registration.firstName,
+        lastName: registration.lastName,
+        slotType: registration.slot.type,
+        slotDate: registration.slot.date,
+      })),
+    };
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    throw new Error("Failed to fetch dashboard stats");
+  }
+};
+
 export const getAllSlots = async () => {
   try {
     const slots = await prisma.slot.findMany({
