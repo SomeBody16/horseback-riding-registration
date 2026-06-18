@@ -18,6 +18,8 @@ import { Registration, Slot } from "@/prisma/generated";
 import dayjs from "dayjs";
 import { SlotCalendar } from "./SlotCalendar";
 
+const REGISTRATION_URL = "https://horse-riding.something.network/registration";
+
 export type RegistrationPageProps = {
 	slots: (Slot & { registrations: Registration[] })[];
 };
@@ -54,11 +56,15 @@ export function RegistrationPage({ slots }: RegistrationPageProps) {
 					.sort((a, b) => a.startTime.localeCompare(b.startTime))
 					.map((slot) => {
 						const registrations = slot.registrations || [];
+
+						if (registrations.length === 0) {
+							return `${slot.startTime} - [Register here](${REGISTRATION_URL})`;
+						}
+
 						return registrations
 							.map((reg) => `${slot.startTime} - ${reg.firstName} ${reg.lastName}`)
 							.join("\n");
 					})
-					.filter(Boolean)
 					.join("\n");
 
 				return `${formattedDate} ${weekDay}\n${registrationsText}`;
