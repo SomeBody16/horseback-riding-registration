@@ -1,4 +1,5 @@
 import Image from "next/image";
+import dayjs from "dayjs";
 import { PrismaClient } from "@/prisma/generated";
 import { Container, Title, Stack } from "@mantine/core";
 import { FormContainer } from "@/component/FormContainer";
@@ -13,6 +14,11 @@ const horseImage = {
 
 const getSlots = async () => {
 	const slots = await prisma.slot.findMany({
+		where: {
+			date: {
+				gte: dayjs().startOf("day").toDate(),
+			},
+		},
 		include: {
 			registrations: true,
 		},
