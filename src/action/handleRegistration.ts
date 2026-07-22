@@ -1,6 +1,8 @@
 "use server";
 
 import { PrismaClient, Registration, Slot } from "@/prisma/generated";
+import { isSlotVisible } from "@/lib/slotVisibility";
+import dayjs from "dayjs";
 import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
@@ -47,10 +49,24 @@ const assertSlotHasCapacity = async (slot: Slot & { registrations: Registration[
 	}
 }
 
+const assertSlotIsVisible = (slot: Slot) => {
+	if (!isSlotVisible(slot.visibleSince)) {
+		throw errorRedirect('registration-not-open')
+	}
+}
+
+const assertSlotDateIsFuture = (slot: Slot) => {
+	if (dayjs(slot.date).isBefore(dayjs().startOf("day"))) {
+		throw errorRedirect('slot-not-found')
+	}
+}
+
 export const handleRegistration = async (formData: FormData) => {
 	const { firstName, lastName, slotId } = parseFormData(formData);
 
 	const slot = await assertSlotExists(slotId);
+	await assertSlotDateIsFuture(slot);
+	await assertSlotIsVisible(slot);
 	await assertSlotHasCapacity(slot);
 
 	// Create the registration

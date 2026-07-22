@@ -3,6 +3,7 @@ import { Slot } from "@/prisma/generated";
 import { Group, Radio, ScrollArea, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { useMappedState } from "@/hooks/useMappedState";
+import { formatRegistrationOpensAt, isSlotVisible } from "@/lib/slotVisibility";
 
 export type StepSlotsTimeProps = {
 	slots: Slot[];
@@ -21,7 +22,13 @@ export function StepSlotsTime(props: StepSlotsTimeProps) {
 
 	const [value, setValue] = useMappedState<Slot | undefined, string>(
 		props.value?.id?.toString(),
-		(value) => props.slots.find((slot) => slot.id.toString() === value)
+		(selectedId) => {
+			const slot = props.slots.find((item) => item.id.toString() === selectedId);
+			if (!slot || !isSlotVisible(slot.visibleSince)) {
+				return undefined;
+			}
+			return slot;
+		}
 	);
 	useEffect(() => {
 		props.onChange(value);
@@ -31,19 +38,33 @@ export function StepSlotsTime(props: StepSlotsTimeProps) {
 		<Radio.Group value={value?.id.toString()} onChange={setValue}>
 			<ScrollArea h={250}>
 				<Stack gap="xs" pt="xs">
-					{availableSlots.map((slot) => (
-						<Radio.Card key={slot.id} radius="md" value={slot.id.toString()}>
-							<Group wrap="nowrap" align="flex-start" gap="xs" p="xs">
-								<Radio.Indicator />
-								<div>
-									<Text size="sm" fw={700}>
-										{slot.startTime} - {slot.endTime}
-									</Text>
-									<Text c="gray.6">{slot.type}</Text>
-								</div>
-							</Group>
-						</Radio.Card>
-					))}
+					{availableSlots.map((slot) => {
+						const visible = isSlotVisible(slot.visibleSince);
+
+						return (
+							<Radio.Card
+								key={slot.id}
+								radius="md"
+								value={slot.id.toString()}
+								disabled={!visible}
+							>
+								<Group wrap="nowrap" align="flex-start" gap="xs" p="xs">
+									<Radio.Indicator disabled={!visible} />
+									<div>
+										<Text size="sm" fw={700} c={visible ? undefined : "dimmed"}>
+											{slot.startTime} - {slot.endTime}
+										</Text>
+										<Text c={visible ? "gray.6" : "dimmed"}>{slot.type}</Text>
+										{!visible && (
+											<Text size="xs" c="blue" mt={4}>
+												Registration opens {formatRegistrationOpensAt(slot.visibleSince)}
+											</Text>
+										)}
+									</div>
+								</Group>
+							</Radio.Card>
+						);
+					})}
 				</Stack>
 			</ScrollArea>
 		</Radio.Group>

@@ -9,12 +9,13 @@ datasource db {
 }
 
 model Slot {
-  id        Int      @id @default(autoincrement())
-  date      DateTime
-  startTime String
-  endTime   String
-  type      String
-  limit     Int
+  id           Int      @id @default(autoincrement())
+  date         DateTime
+  startTime    String
+  endTime      String
+  type         String
+  limit        Int
+  visibleSince DateTime @default(now())
 
   registrations Registration[]
 }

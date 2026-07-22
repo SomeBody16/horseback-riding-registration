@@ -21,6 +21,12 @@ const getErrorMessage = (error?: string) => {
 				message:
 					"This time slot has reached its maximum capacity. Please select a different time slot.",
 			};
+		case "registration-not-open":
+			return {
+				title: "Registration Not Open Yet",
+				message:
+					"Registration for this time slot is not open yet. Please check when registration opens and try again.",
+			};
 		default:
 			return {
 				title: "Registration Failed",

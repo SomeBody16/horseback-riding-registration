@@ -10,7 +10,7 @@ import {
 	Stack,
 	Select,
 } from "@mantine/core";
-import { TimeInput } from "@mantine/dates";
+import { DateTimePicker, TimeInput } from "@mantine/dates";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 import { createSlot } from "@/action/slots";
@@ -18,6 +18,12 @@ import { SlotCalendar } from "./SlotCalendar";
 import { Slot } from "@/prisma/generated";
 import { slotTypes } from "../slotTypes";
 import { useNotificationAction } from "@/hooks/useNotificationAction";
+import { useState } from "react";
+
+function toDateValue(value: string | Date | null, fallback: Date): Date {
+	if (!value) return fallback;
+	return value instanceof Date ? value : new Date(value);
+}
 
 export type CreateFormProps = {
 	slots: Slot[];
@@ -25,6 +31,7 @@ export type CreateFormProps = {
 
 export function CreateForm({ slots }: CreateFormProps) {
 	const [, createSlotAction, pending] = useNotificationAction(createSlot);
+	const [visibleSince, setVisibleSince] = useState<Date>(new Date());
 
 	return (
 		<Container size="md">
@@ -79,6 +86,21 @@ export function CreateForm({ slots }: CreateFormProps) {
 										placeholder="Maximum number of participants"
 										min={1}
 										required
+									/>
+
+									<DateTimePicker
+										label="Visible since"
+										description="When this slot becomes available for registration"
+										value={visibleSince}
+										onChange={(value) =>
+											setVisibleSince(toDateValue(value, new Date()))
+										}
+										required
+									/>
+									<input
+										type="hidden"
+										name="visibleSince"
+										value={visibleSince.toISOString()}
 									/>
 								</Stack>
 							</Group>

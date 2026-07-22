@@ -14,7 +14,7 @@ import {
 	Text,
 	Modal,
 } from "@mantine/core";
-import { TimeInput, DatePickerInput } from "@mantine/dates";
+import { TimeInput, DatePickerInput, DateTimePicker } from "@mantine/dates";
 import { IconArrowLeft, IconTrash, IconEdit, IconCheck, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { updateSlot, removeRegistration, updateRegistration } from "@/action/slots";
@@ -23,6 +23,11 @@ import { slotTypes } from "../../slotTypes";
 import { useNotificationAction } from "@/hooks/useNotificationAction";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
+
+function toDateValue(value: string | Date | null, fallback: Date): Date {
+	if (!value) return fallback;
+	return value instanceof Date ? value : new Date(value);
+}
 
 interface EditFormProps {
 	readonly slot: Slot & { registrations: Registration[] };
@@ -40,6 +45,7 @@ export function EditForm({ slot }: EditFormProps) {
 	const [editingReg, setEditingReg] = useState<EditingRegistration | null>(null);
 	const [deleteRegId, setDeleteRegId] = useState<number | null>(null);
 	const [deleteModalOpened, { open: openDeleteModal, close: closeDeleteModal }] = useDisclosure(false);
+	const [visibleSince, setVisibleSince] = useState<Date>(new Date(slot.visibleSince));
 
 	const handleEditRegistration = (reg: Registration): void => {
 		setEditingReg({
@@ -122,6 +128,21 @@ export function EditForm({ slot }: EditFormProps) {
 									defaultValue={slot.limit}
 									min={1}
 									required
+								/>
+
+								<DateTimePicker
+									label="Visible since"
+									description="When this slot becomes available for registration"
+									value={visibleSince}
+									onChange={(value) =>
+										setVisibleSince(toDateValue(value, new Date(slot.visibleSince)))
+									}
+									required
+								/>
+								<input
+									type="hidden"
+									name="visibleSince"
+									value={visibleSince.toISOString()}
 								/>
 							</Stack>
 							<Group justify="flex-end" gap="md" mt="lg">

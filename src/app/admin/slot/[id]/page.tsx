@@ -101,6 +101,13 @@ export default async function SlotDetailsPage({
 
 								<Group>
 									<Text fw={500} w={120}>
+										Visible since:
+									</Text>
+									<Text>{format(slot.visibleSince, "dd/MM/yyyy HH:mm")}</Text>
+								</Group>
+
+								<Group>
+									<Text fw={500} w={120}>
 										Registrations:
 									</Text>
 									<Badge

@@ -13,8 +13,12 @@ const parseSlotFormData = (formData: FormData) => {
   const endTime = formData.get("endTime") as string;
   const type = formData.get("type") as string;
 	const limit = parseInt(formData.get("limit") as string, 10);
+	const visibleSinceRaw = formData.get("visibleSince") as string;
+	const visibleSince = visibleSinceRaw
+		? dayjs(visibleSinceRaw).toDate()
+		: new Date();
 
-  if (!date || !startTime || !endTime || !type || isNaN(limit)) {
+  if (!date || !startTime || !endTime || !type || isNaN(limit) || !visibleSinceRaw) {
 		throw NotificationAction.error({
 			title: "Missing required fields",
 			message: "Please fill in all required fields",
@@ -22,7 +26,7 @@ const parseSlotFormData = (formData: FormData) => {
 		})
   }
 
-	return { date, startTime, endTime, type, limit };
+	return { date, startTime, endTime, type, limit, visibleSince };
 };
 
 export const createSlot = NotificationAction.create(async (_, formData) => {
@@ -225,9 +229,16 @@ export const updateSlot = NotificationAction.create(async (_, formData) => {
   redirect(`/admin/slot/${slotId}`);
 });
 
-export const copySlotsToNextWeek = async (slotIds: number[]): Promise<{ count: number }> => {
+export const copySlotsToNextWeek = async (
+	slotIds: number[],
+	visibleSince: Date
+): Promise<{ count: number }> => {
 	if (!slotIds.length) {
 		throw new Error("Select at least one slot to copy");
+	}
+
+	if (!visibleSince || Number.isNaN(visibleSince.getTime())) {
+		throw new Error("Invalid visible since date");
 	}
 
 	const slots = await prisma.slot.findMany({
@@ -247,6 +258,7 @@ export const copySlotsToNextWeek = async (slotIds: number[]): Promise<{ count: n
 					endTime: slot.endTime,
 					type: slot.type,
 					limit: slot.limit,
+					visibleSince,
 				},
 			})
 		)
