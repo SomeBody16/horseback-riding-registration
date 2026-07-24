@@ -1,7 +1,8 @@
 import Image from "next/image";
 import dayjs from "dayjs";
 import { PrismaClient } from "@/prisma/generated";
-import { Container, Title, Stack } from "@mantine/core";
+import Link from "next/link";
+import { Anchor, Container, Stack, Text, Title } from "@mantine/core";
 import { FormContainer } from "@/component/FormContainer";
 
 const prisma = new PrismaClient();
@@ -40,6 +41,12 @@ export default async function RegistrationPage() {
 						height={horseImage.height()}
 					/>
 					<Title order={1}>Registration</Title>
+					<Text size="sm" c="dimmed">
+						New participant?{" "}
+						<Anchor component={Link} href="/guide">
+							Read the guide
+						</Anchor>
+					</Text>
 				</Stack>
 				<FormContainer slots={slots} />
 			</Stack>

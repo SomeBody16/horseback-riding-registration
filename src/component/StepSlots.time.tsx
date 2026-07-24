@@ -56,9 +56,14 @@ export function StepSlotsTime(props: StepSlotsTimeProps) {
 										</Text>
 										<Text c={visible ? "gray.6" : "dimmed"}>{slot.type}</Text>
 										{!visible && (
-											<Text size="xs" c="blue" mt={4}>
-												Registration opens {formatRegistrationOpensAt(slot.visibleSince)}
-											</Text>
+											<Stack gap={0} mt={4}>
+												<Text size="xs" c="blue">
+													Registration opens
+												</Text>
+												<Text size="xs" c="blue">
+													{formatRegistrationOpensAt(slot.visibleSince)}
+												</Text>
+											</Stack>
 										)}
 									</div>
 								</Group>
