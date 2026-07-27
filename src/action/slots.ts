@@ -89,6 +89,7 @@ export interface RecentActivity {
   lastName: string;
   slotType: string;
   slotDate: Date;
+  visitNumber: number;
 }
 
 export interface ParticipantSummary {
@@ -108,6 +109,36 @@ export interface DashboardStats {
 export interface DashboardRange {
   from?: Date;
   to?: Date;
+}
+
+const participantKey = (firstName: string, lastName: string): string =>
+  `${firstName}\0${lastName}`;
+
+async function getVisitNumbersForRegistrations(
+  registrations: { id: number; firstName: string; lastName: string }[]
+): Promise<Map<number, number>> {
+  const visitNumbers = new Map<number, number>();
+  if (registrations.length === 0) {
+    return visitNumbers;
+  }
+
+  const participantRegistrations = await prisma.registration.findMany({
+    where: {
+      OR: registrations.map(({ firstName, lastName }) => ({ firstName, lastName })),
+    },
+    orderBy: [{ slot: { date: "asc" } }, { id: "asc" }],
+    select: { id: true, firstName: true, lastName: true },
+  });
+
+  const counters = new Map<string, number>();
+  for (const registration of participantRegistrations) {
+    const key = participantKey(registration.firstName, registration.lastName);
+    const visitNumber = (counters.get(key) ?? 0) + 1;
+    counters.set(key, visitNumber);
+    visitNumbers.set(registration.id, visitNumber);
+  }
+
+  return visitNumbers;
 }
 
 export const getDashboardStats = async (range: DashboardRange = {}): Promise<DashboardStats> => {
@@ -152,6 +183,8 @@ export const getDashboardStats = async (range: DashboardRange = {}): Promise<Das
           a.lastName.localeCompare(b.lastName)
       );
 
+    const visitNumbers = await getVisitNumbersForRegistrations(recent);
+
     return {
       participantCount,
       uniqueParticipantCount: groups.length,
@@ -163,6 +196,7 @@ export const getDashboardStats = async (range: DashboardRange = {}): Promise<Das
         lastName: registration.lastName,
         slotType: registration.slot.type,
         slotDate: registration.slot.date,
+        visitNumber: visitNumbers.get(registration.id) ?? 1,
       })),
     };
   } catch (error) {

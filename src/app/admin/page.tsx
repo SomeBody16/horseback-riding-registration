@@ -1,4 +1,4 @@
-import { Container, Title, Text, SimpleGrid, Card, Group, Stack } from '@mantine/core';
+import { Container, Title, Text, SimpleGrid, Card, Group, Stack, Badge } from '@mantine/core';
 import { IconCalendarTime } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { getDashboardStats } from '@/action/slots';
@@ -7,6 +7,13 @@ import ParticipantStatsCards from './ParticipantStatsCards';
 
 interface AdminDashboardProps {
   readonly searchParams: Promise<{ from?: string; to?: string }>;
+}
+
+function formatVisitLabel(visitNumber: number): string {
+  const suffixes = ['th', 'st', 'nd', 'rd'];
+  const remainder = visitNumber % 100;
+  const suffix = suffixes[(remainder - 20) % 10] ?? suffixes[remainder] ?? suffixes[0];
+  return `${visitNumber}${suffix} time`;
 }
 
 export default async function AdminDashboard({ searchParams }: AdminDashboardProps) {
@@ -57,9 +64,18 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
               {recentActivity.map((activity) => (
                 <Group key={activity.id} justify="space-between" wrap="nowrap">
                   <div>
-                    <Text fw={500}>
-                      {activity.firstName} {activity.lastName}
-                    </Text>
+                    <Group gap="xs">
+                      <Text fw={500}>
+                        {activity.firstName} {activity.lastName}
+                      </Text>
+                      <Badge
+                        variant={activity.visitNumber === 1 ? 'filled' : 'light'}
+                        color={activity.visitNumber === 1 ? 'yellow' : 'gray'}
+                        size="sm"
+                      >
+                        {formatVisitLabel(activity.visitNumber)}
+                      </Badge>
+                    </Group>
                     <Text size="sm" c="dimmed">
                       Registered for {activity.slotType}
                     </Text>
