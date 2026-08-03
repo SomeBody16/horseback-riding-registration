@@ -22,10 +22,16 @@ interface DateRange {
  * `from`/`to` use the `YYYY-MM-DD` format.
  */
 const FISCAL_QUARTERS: readonly DateRange[] = [
+	// FY2026
 	{ label: "Q1FY26", from: "2025-07-27", to: "2025-10-25" },
 	{ label: "Q2FY26", from: "2025-10-26", to: "2026-01-24" },
 	{ label: "Q3FY26", from: "2026-01-25", to: "2026-04-25" },
 	{ label: "Q4FY26", from: "2026-04-26", to: "2026-07-25" },
+	// FY2027
+	{ label: "Q1FY27", from: "2026-07-26", to: "2026-10-24" },
+	{ label: "Q2FY27", from: "2026-10-25", to: "2027-01-23" },
+	{ label: "Q3FY27", from: "2027-01-24", to: "2027-05-01" },
+	{ label: "Q4FY27", from: "2027-05-02", to: "2027-07-31" },
 ];
 
 /** Build whole fiscal year ranges (Q1 `from` → Q4 `to`) from the quarters. */
